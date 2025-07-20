@@ -6,8 +6,7 @@
   <style>
     body {
       margin: 0;
-      background: url('bg.jpg') no-repeat center center fixed;
-      background-size: cover;
+      background: #ffccd5; /* Warmer romantic background */
       overflow: hidden;
       font-family: 'Comic Sans MS', cursive;
       cursor: url('heart-cursor.png'), auto;
@@ -15,7 +14,7 @@
     canvas {
       display: block;
       margin: 0 auto;
-      background: rgba(255, 240, 245, 0.8);
+      background: rgba(255, 192, 203, 0.95); /* Slightly deeper pink overlay */
       border: 4px dashed #ff66b2;
     }
     #message {
@@ -41,15 +40,21 @@
 </head>
 <body>
 
+<!-- 🎵 Background Music -->
 <audio autoplay loop>
   <source src="bg-music.mp3" type="audio/mpeg">
 </audio>
 
+<!-- 🎮 Game Canvas -->
 <canvas id="gameCanvas" width="400" height="600"></canvas>
 <canvas id="confetti-canvas"></canvas>
+
+<!-- 💌 Message -->
 <div id="message">You caught my heart! 💖<br>I love you so much.<br><br>Love, Prachi 💌</div>
 
+<!-- 🎉 Confetti Script -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
 <script>
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
@@ -63,7 +68,7 @@
   let score = 0;
   const winScore = 5;
 
-  // Cursor control
+  // 🖱️ Mouse movement
   canvas.addEventListener("mousemove", e => {
     const rect = canvas.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
@@ -92,10 +97,10 @@
 
   function showMessage() {
     document.getElementById("message").style.display = "block";
-    confetti(); // trigger confetti
+    launchConfetti();
   }
 
-  function confetti() {
+  function launchConfetti() {
     const duration = 3 * 1000;
     const end = Date.now() + duration;
     const confettiInstance = window.confetti.create(confettiCanvas, { resize: true });
