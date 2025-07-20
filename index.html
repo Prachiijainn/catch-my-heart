@@ -6,15 +6,15 @@
   <style>
     body {
       margin: 0;
-      background: #ffccd5; /* Warmer romantic background */
+      background: #ffe6f0;
       overflow: hidden;
       font-family: 'Comic Sans MS', cursive;
-      cursor: url('heart-cursor.png'), auto;
+      cursor: none;
     }
     canvas {
       display: block;
       margin: 0 auto;
-      background: rgba(255, 192, 203, 0.95); /* Slightly deeper pink overlay */
+      background: #fff0f5;
       border: 4px dashed #ff66b2;
     }
     #message {
@@ -28,47 +28,24 @@
       border: 3px solid #ff66b2;
       border-radius: 12px;
       display: none;
-      text-align: center;
-    }
-    #confetti-canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      pointer-events: none;
     }
   </style>
 </head>
 <body>
 
-<!-- 🎵 Background Music -->
-<audio autoplay loop>
-  <source src="bg-music.mp3" type="audio/mpeg">
-</audio>
-
-<!-- 🎮 Game Canvas -->
 <canvas id="gameCanvas" width="400" height="600"></canvas>
-<canvas id="confetti-canvas"></canvas>
-
-<!-- 💌 Message -->
-<div id="message">You caught my heart! 💖<br>I love you so much.<br><br>Love, Prachi 💌</div>
-
-<!-- 🎉 Confetti Script -->
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+<div id="message">You caught my heart! 💖<br>I love you so much, [Your Name] 💌</div>
 
 <script>
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
 
-  const confettiCanvas = document.getElementById("confetti-canvas");
-  confettiCanvas.width = window.innerWidth;
-  confettiCanvas.height = window.innerHeight;
-
   let player = { x: 180, y: 550, width: 40, height: 40 };
   let hearts = [];
   let score = 0;
-  const winScore = 5;
+  const winScore = 5; // Reduced from 10
 
-  // 🖱️ Mouse movement
+  // 🖱️ Move player with cursor
   canvas.addEventListener("mousemove", e => {
     const rect = canvas.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
@@ -97,32 +74,6 @@
 
   function showMessage() {
     document.getElementById("message").style.display = "block";
-    launchConfetti();
-  }
-
-  function launchConfetti() {
-    const duration = 3 * 1000;
-    const end = Date.now() + duration;
-    const confettiInstance = window.confetti.create(confettiCanvas, { resize: true });
-
-    (function frame() {
-      confettiInstance({
-        particleCount: 2,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0 },
-      });
-      confettiInstance({
-        particleCount: 2,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1 },
-      });
-
-      if (Date.now() < end) {
-        requestAnimationFrame(frame);
-      }
-    })();
   }
 
   function updateGame() {
@@ -130,14 +81,16 @@
     drawPlayer();
     drawScore();
 
-    if (Math.random() < 0.01) {
+    // 🩷 Less hearts: spawn rate reduced from 0.03 to 0.015
+    if (Math.random() < 0.015) {
       hearts.push({ x: Math.random() * 360, y: 0 });
     }
 
     hearts.forEach((h, i) => {
-      h.y += 1.5;
+      h.y += 3;
       drawHeart(h);
 
+      // Collision check
       if (
         h.y + 30 > player.y &&
         h.x + 10 > player.x &&
