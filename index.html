@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Catch My Heart 💘</title>
+  <style>
+    body {
+      margin: 0;
+      background: #ffe6f0;
+      overflow: hidden;
+      font-family: 'Comic Sans MS', cursive;
+    }
+    canvas {
+      display: block;
+      margin: 0 auto;
+      background: #fff0f5;
+      border: 4px dashed #ff66b2;
+    }
+    #message {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      background: #fff;
+      padding: 20px;
+      border: 3px solid #ff66b2;
+      border-radius: 12px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="gameCanvas" width="400" height="600"></canvas>
+<div id="message">You caught my heart! 💖<br>I love you so much, PRABHAT RANJAN PATHAK 💌</div>
+
+<script>
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
+
+  let player = { x: 180, y: 550, width: 40, height: 40 };
+  let hearts = [];
+  let score = 0;
+  const winScore = 10;
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "ArrowLeft" && player.x > 0) player.x -= 20;
+    if (e.key === "ArrowRight" && player.x < canvas.width - player.width) player.x += 20;
+  });
+
+  function drawHeart(h) {
+    ctx.beginPath();
+    ctx.fillStyle = "#ff6699";
+    ctx.moveTo(h.x + 10, h.y + 10);
+    ctx.bezierCurveTo(h.x, h.y, h.x - 10, h.y + 20, h.x + 10, h.y + 30);
+    ctx.bezierCurveTo(h.x + 30, h.y + 20, h.x + 20, h.y, h.x + 10, h.y + 10);
+    ctx.fill();
+  }
+
+  function drawPlayer() {
+    ctx.fillStyle = "#ff3399";
+    ctx.fillRect(player.x, player.y, player.width, player.height);
+  }
+
+  function drawScore() {
+    ctx.fillStyle = "#ff3399";
+    ctx.font = "20px Comic Sans MS";
+    ctx.fillText("Score: " + score, 10, 30);
+  }
+
+  function showMessage() {
+    document.getElementById("message").style.display = "block";
+  }
+
+  function updateGame() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawPlayer();
+    drawScore();
+
+    if (Math.random() < 0.03) {
+      hearts.push({ x: Math.random() * 360, y: 0 });
+    }
+
+    hearts.forEach((h, i) => {
+      h.y += 3;
+      drawHeart(h);
+
+      // Check collision
+      if (
+        h.y + 30 > player.y &&
+        h.x + 10 > player.x &&
+        h.x < player.x + player.width
+      ) {
+        hearts.splice(i, 1);
+        score++;
+        if (score >= winScore) showMessage();
+      }
+    });
+
+    if (score < winScore) requestAnimationFrame(updateGame);
+  }
+
+  updateGame();
+</script>
+</body>
+</html>
