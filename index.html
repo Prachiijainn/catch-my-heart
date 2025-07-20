@@ -9,6 +9,7 @@
       background: #ffe6f0;
       overflow: hidden;
       font-family: 'Comic Sans MS', cursive;
+      cursor: none;
     }
     canvas {
       display: block;
@@ -33,7 +34,7 @@
 <body>
 
 <canvas id="gameCanvas" width="400" height="600"></canvas>
-<div id="message">You caught my heart! 💖<br>I love you so much, PRABHAT RANJAN PATHAK 💌</div>
+<div id="message">You caught my heart! 💖<br>I love you so much, [Your Name] 💌</div>
 
 <script>
   const canvas = document.getElementById("gameCanvas");
@@ -42,11 +43,13 @@
   let player = { x: 180, y: 550, width: 40, height: 40 };
   let hearts = [];
   let score = 0;
-  const winScore = 10;
+  const winScore = 5; // Reduced from 10
 
-  document.addEventListener("keydown", e => {
-    if (e.key === "ArrowLeft" && player.x > 0) player.x -= 20;
-    if (e.key === "ArrowRight" && player.x < canvas.width - player.width) player.x += 20;
+  // 🖱️ Move player with cursor
+  canvas.addEventListener("mousemove", e => {
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    player.x = mouseX - player.width / 2;
   });
 
   function drawHeart(h) {
@@ -78,7 +81,8 @@
     drawPlayer();
     drawScore();
 
-    if (Math.random() < 0.03) {
+    // 🩷 Less hearts: spawn rate reduced from 0.03 to 0.015
+    if (Math.random() < 0.015) {
       hearts.push({ x: Math.random() * 360, y: 0 });
     }
 
@@ -86,7 +90,7 @@
       h.y += 3;
       drawHeart(h);
 
-      // Check collision
+      // Collision check
       if (
         h.y + 30 > player.y &&
         h.x + 10 > player.x &&
